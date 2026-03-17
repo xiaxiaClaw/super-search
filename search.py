@@ -7,8 +7,6 @@ import argparse
 import subprocess
 import sys
 import os
-import json
-import urllib.request
 
 # 搜索引擎模板
 WEB_TEMPLATES = {
@@ -24,10 +22,56 @@ WEB_TEMPLATES = {
         "baidu": "https://v.baidu.com/v?word={keyword}",
         "bilibili": "https://search.bilibili.com/video?keyword={keyword}",
     },
+    # 论文搜索
+    "paper": {
+        "baidu": "https://www.baidu.com/s?wd={keyword} 论文 site:arxiv.org OR site:cnki.net",
+        "bing": "https://cn.bing.com/search?q={keyword} paper",
+    },
+    # AI/科技搜索
+    "ai": {
+        "baidu": "https://www.baidu.com/s?wd={keyword} AI 人工智能",
+        "bing": "https://cn.bing.com/search?q={keyword} AI",
+    },
+    # 财经搜索
+    "finance": {
+        "baidu": "https://www.baidu.com/s?wd={keyword} 财经 股票",
+        "bing": "https://finance.bing.com/search?q={keyword}",
+    },
+    # 政治搜索
+    "politics": {
+        "baidu": "https://www.baidu.com/s?wd={keyword} 政治 时政",
+        "bing": "https://cn.bing.com/search?q={keyword} politics",
+    },
+    # 学术搜索
+    "academic": {
+        "baidu": "https://www.baidu.com/s?wd={keyword} 学术 研究",
+        "bing": "https://cn.bing.com/academic/search?q={keyword}",
+    },
+    # 购物搜索
+    "shopping": {
+        "baidu": "https://www.baidu.com/s?wd={keyword} 价格 购买",
+        "bing": "https://cn.bing.com/shop/search?q={keyword}",
+    },
+    # 地图搜索
+    "map": {
+        "baidu": "https://map.baidu.com/?newmap=1&wd={keyword}",
+        "bing": "https://www.bing.com/maps?q={keyword}",
+    },
 }
 
 DEFAULT_ENGINE = "baidu"
-SEARCH_TYPES = ["web", "news", "image", "video"]
+SEARCH_TYPES = ["web", "news", "image", "video", "paper", "ai", "finance", "politics", "academic", "shopping", "map"]
+
+# 图片URL模板
+IMAGE_URLS = {
+    "猫": "https://cataas.com/cat?width=800&height=600&random={i}",
+    "cat": "https://cataas.com/cat?width=800&height=600&random={i}",
+    "狗": "https://images.dog.ceo/breeds/labrador/n02104029_{i}.jpg",
+    "dog": "https://images.dog.ceo/breeds/labrador/n02104029_{i}.jpg",
+    "风景": "https://picsum.photos/id/1{i:03d}/800/600",
+    "landscape": "https://picsum.photos/id/1{i:03d}/800/600",
+    "random": "https://picsum.photos/800/600?random={i}",
+}
 
 def get_fetch_script():
     """获取 super-fetch 脚本路径"""
@@ -39,61 +83,30 @@ def get_fetch_script():
 
 def search_image(keyword):
     """图片搜索 - 返回真实图片URL"""
-    keyword = keyword.lower().strip()
+    keyword_lower = keyword.lower().strip()
     
     print(f"[Super Search] 🖼️ 图片搜索: {keyword}")
     print()
     
-    try:
-        if "猫" in keyword or "cat" in keyword:
-            # 猫咪图片 - Cataas
-            print("🐱 猫咪图片URL:")
-            for i in range(1, 6):
-                print(f"  {i}. https://cataas.com/cat?width=800&height=600&random={i}")
-            return
-            
-        elif "狗" in keyword or "dog" in keyword:
-            # 狗狗图片 - DogCEO API
-            print("🐕 狗狗图片URL:")
-            for i in range(1, 6):
-                print(f"  {i}. https://images.dog.ceo/breeds/labrador/n02104029_{i}.jpg")
-            return
-            
-        elif "random" in keyword or "随机" in keyword:
-            # 随机图片 - Picsum
-            print("🎲 随机图片URL:")
-            for i in range(1, 6):
-                print(f"  {i}. https://picsum.photos/800/600?random={i}")
-            return
-            
-        elif "风景" in keyword or "landscape" in keyword:
-            # 风景图片
-            print("🏞️ 风景图片URL:")
-            for i in range(1, 6):
-                print(f"  {i}. https://picsum.photos/id/1{i:03d}/800/600")
-            return
-            
-        else:
-            # 默认搜索猫咪
-            print(f"⚠️ 未知关键词 '{keyword}'，默认搜索猫咪图片")
-            print("🐱 猫咪图片URL:")
-            for i in range(1, 6):
-                print(f"  {i}. https://cataas.com/cat?width=800&height=600&random={i}")
-            return
-            
-    except Exception as e:
-        print(f"❌ 图片搜索失败: {e}")
-        return
-
-    print("\n可用图片类型:")
-    print("  - 猫咪/cat: 猫咪图片")
-    print("  - 狗狗/dog: 狗狗图片") 
-    print("  - 风景/landscape: 风景图片")
-    print("  - random: 随机图片")
+    # 匹配图片类型
+    img_type = None
+    for key in IMAGE_URLS:
+        if key in keyword_lower:
+            img_type = key
+            break
+    
+    if img_type is None:
+        # 默认猫咪
+        img_type = "猫"
+    
+    urls = IMAGE_URLS[img_type]
+    print(f"📷 图片 ({img_type}):")
+    for i in range(1, 6):
+        print(f"  {i}. {urls.format(i=i)}")
 
 def main():
     parser = argparse.ArgumentParser(description="Super Search - 基于 super-fetch 的聚合搜索")
-    parser.add_argument("search_type", choices=SEARCH_TYPES, help="搜索类型: web, news, image, video")
+    parser.add_argument("search_type", choices=SEARCH_TYPES, help="搜索类型")
     parser.add_argument("keyword", help="搜索关键词")
     parser.add_argument("-e", "--engine", default=DEFAULT_ENGINE, help=f"搜索引擎 (默认: {DEFAULT_ENGINE})")
     parser.add_argument("-p", "--playwright", action="store_true", help="使用 playwright 引擎")
@@ -112,7 +125,15 @@ def main():
     engine = args.engine if args.engine in templates else DEFAULT_ENGINE
     url = templates[engine].replace("{keyword}", args.keyword)
     
-    print(f"[Super Search] 类型: {args.search_type} | 引擎: {engine} | 关键词: {args.keyword}")
+    # 显示搜索类型图标
+    icons = {
+        "web": "🌐", "news": "📰", "video": "🎬", 
+        "paper": "📚", "ai": "🤖", "finance": "💰",
+        "politics": "🏛️", "academic": "🎓", "shopping": "🛒", "map": "🗺️"
+    }
+    icon = icons.get(args.search_type, "🔍")
+    
+    print(f"[Super Search] {icon} {args.search_type} | 引擎: {engine} | 关键词: {args.keyword}")
     print(f"[Super Search] URL: {url}")
     print()
     
