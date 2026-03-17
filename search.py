@@ -118,6 +118,8 @@ def main():
     parser.add_argument("-p", "--playwright", action="store_true", help="使用 playwright 引擎")
     parser.add_argument("-w", "--wait", type=int, default=5, help="等待秒数")
     parser.add_argument("-f", "--full", action="store_true", help="获取完整内容")
+    parser.add_argument("-s", "--session", help="会话文件 (用于登录状态)")
+    parser.add_argument("--login", action="store_true", help="交互式登录")
     
     args = parser.parse_args()
     
@@ -159,6 +161,11 @@ def main():
     
     if args.full:
         cmd.append("--full")
+    
+    if args.login:
+        cmd.append("--login")
+    elif args.session:
+        cmd.extend(["-s", args.session])
     
     if args.playwright:
         cmd.extend(["-e", "playwright", "-w", str(args.wait)])

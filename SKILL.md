@@ -71,7 +71,9 @@ python {baseDir}/search.py politics "国际关系"
 
 | 参数 | 说明 |
 |------|------|
-| `-e, --engine` | 搜索引擎 (baidu/bing 默认: baidu) |
+| `-e, --engine` | 搜索引擎 |
 | `-p, --playwright` | 使用 playwright 引擎 |
 | `-w, --wait` | 等待秒数 (默认: 5) |
 | `-f, --full` | 获取完整内容 |
+| `-s, --session` | 会话文件 (登录状态) |
+| `--login` | 交互式登录 |
