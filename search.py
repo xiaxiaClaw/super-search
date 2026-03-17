@@ -166,18 +166,21 @@ def main():
     if args.full:
         cmd.append("--full")
     
-    if args.login:
-        cmd.append("--login")
-        # 自动保存会话（统一使用 session.json）
+    # 只有在使用 session 或 login 时才传递 session 参数
+    if args.login or args.session:
+        if args.login:
+            cmd.append("--login")
+        
         os.makedirs(SESSION_DIR, exist_ok=True)
         if args.session:
             session_file = args.session
         else:
             session_file = DEFAULT_SESSION
+        
+        if args.login:
+            print(f"[Super Search] 💾 会话将保存至: {session_file}")
+        
         cmd.extend(["-s", session_file])
-        print(f"[Super Search] 💾 会话将保存至: {session_file}")
-    elif args.session:
-        cmd.extend(["-s", args.session])
     
     if args.playwright:
         cmd.extend(["-e", "playwright", "-w", str(args.wait)])
