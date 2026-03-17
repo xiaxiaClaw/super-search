@@ -1,92 +1,92 @@
 #!/usr/bin/env python3
 """
-Super Search - 聚合搜索工具
-基于 super-fetch 实现多种类型搜索
+Super Search - 基于 super-fetch 的聚合搜索工具
 """
 
 import argparse
+import subprocess
 import sys
 import os
 
 # 搜索模板
 SEARCH_TEMPLATES = {
-    # 网页搜索
     "web": {
         "baidu": "https://www.baidu.com/s?wd={keyword}",
         "bing": "https://cn.bing.com/search?q={keyword}",
-        "sogou": "https://sogou.com/web?query={keyword}",
-        "360": "https://www.so.com/s?q={keyword}",
     },
-    # 新闻搜索
     "news": {
         "baidu": "https://www.baidu.com/s?wd={keyword}&tn=news",
         "bing": "https://cn.bing.com/search?q={keyword}&ensearch=1",
     },
-    # 图片搜索
     "image": {
         "baidu": "https://image.baidu.com/search/index?word={keyword}",
-        "bing": "https://cn.bing.com/images/search?q={keyword}",
     },
-    # 视频搜索
     "video": {
         "baidu": "https://video.baidu.com/v?word={keyword}",
-        "bilibili": "https://search.bilibili.com/video?keyword={keyword}",
     },
 }
 
 DEFAULT_ENGINE = "baidu"
-FETCH_SCRIPT = os.path.join(os.path.dirname(__file__), "..", "super-fetch", "fetch.py")
+SEARCH_TYPES = ["web", "news", "image", "video"]
 
-def build_search_url(search_type, keyword, engine=None):
-    """构建搜索 URL"""
-    if search_type not in SEARCH_TEMPLATES:
-        print(f"错误: 不支持的搜索类型 '{search_type}'")
-        print(f"支持的类型: {', '.join(SEARCH_TEMPLATES.keys())}")
-        sys.exit(1)
+def get_fetch_script():
+    """获取 super-fetch 脚本路径"""
+    # 假设 super-fetch 和 super-search 在同一目录
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    fetch_path = os.path.join(os.path.dirname(script_dir), "super-fetch", "fetch.py")
     
-    engine = engine or DEFAULT_ENGINE
-    if engine not in SEARCH_TEMPLATES[search_type]:
-        engine = list(SEARCH_TEMPLATES[search_type].keys())[0]
+    # 如果不在同级目录，尝试其他位置
+    if not os.path.exists(fetch_path):
+        fetch_path = "/home/xunbu/.openclaw/skills/super-fetch/fetch.py"
     
-    template = SEARCH_TEMPLATES[search_type][engine]
-    url = template.replace("{keyword}", keyword)
-    return url, engine
+    return fetch_path
 
 def main():
-    parser = argparse.ArgumentParser(description="Super Search - 聚合搜索工具")
-    parser.add_argument("search_type", help="搜索类型: web, news, image, video")
+    parser = argparse.ArgumentParser(description="Super Search - 基于 super-fetch 的聚合搜索")
+    parser.add_argument("search_type", choices=SEARCH_TYPES, help="搜索类型")
     parser.add_argument("keyword", help="搜索关键词")
-    parser.add_argument("-e", "--engine", help=f"搜索引擎 (默认: {DEFAULT_ENGINE})")
-    parser.add_argument("-f", "--full", action="store_true", help="获取完整内容")
+    parser.add_argument("-e", "--engine", default=DEFAULT_ENGINE, help=f"搜索引擎 (默认: {DEFAULT_ENGINE})")
     parser.add_argument("-p", "--playwright", action="store_true", help="使用 playwright 引擎")
     parser.add_argument("-w", "--wait", type=int, default=5, help="等待秒数")
+    parser.add_argument("-f", "--full", action="store_true", help="获取完整内容")
     
     args = parser.parse_args()
     
     # 构建搜索 URL
-    url, engine = build_search_url(args.search_type, args.keyword, args.engine)
+    templates = SEARCH_TEMPLATES.get(args.search_type, SEARCH_TEMPLATES["web"])
+    engine = args.engine if args.engine in templates else DEFAULT_ENGINE
+    url = templates[engine].replace("{keyword}", args.keyword)
     
-    print(f"[*] 搜索类型: {args.search_type}")
-    print(f"[*] 搜索引擎: {engine}")
-    print(f"[*] 关键词: {args.keyword}")
-    print(f"[*] URL: {url}")
+    print(f"[Super Search] 类型: {args.search_type} | 引擎: {engine} | 关键词: {args.keyword}")
+    print(f"[Super Search] URL: {url}")
     print()
     
-    # 调用 super-fetch
-    fetch_cmd = [
-        sys.executable,
-        FETCH_SCRIPT,
-        url,
-    ]
+    # 获取 fetch 脚本路径
+    fetch_script = get_fetch_script()
+    
+    if not os.path.exists(fetch_script):
+        print(f"错误: 找不到 super-fetch 脚本: {fetch_script}")
+        sys.exit(1)
+    
+    # 构建 fetch 命令
+    cmd = [sys.executable, fetch_script, url]
     
     if args.full:
-        fetch_cmd.append("--full")
-    if args.playwright:
-        fetch_cmd.extend(["-e", "playwright", "-w", str(args.wait)])
-    else:
-        fetch_cmd.extend(["-e", "cffi"])
+        cmd.append("--full")
     
-    os.execv(sys.executable, fetch_cmd)
+    if args.playwright:
+        cmd.extend(["-e", "playwright", "-w", str(args.wait)])
+    else:
+        cmd.append("-e")
+        cmd.append("cffi")
+    
+    # 执行搜索
+    try:
+        subprocess.run(cmd)
+    except KeyboardInterrupt:
+        print("\n[Super Search] 已取消")
+    except Exception as e:
+        print(f"错误: {e}")
 
 if __name__ == "__main__":
     main()
