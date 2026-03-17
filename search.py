@@ -68,6 +68,9 @@ DEFAULT_ENGINE = "baidu"
 PAPER_DEFAULT_ENGINE = "paperswithcode"
 SEARCH_TYPES = ["web", "news", "image", "video", "paper", "ai", "finance", "politics", "academic", "shopping", "map"]
 
+# Session 文件默认目录
+SESSION_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sessions")
+
 # 图片URL模板
 IMAGE_URLS = {
     "猫": "https://cataas.com/cat?width=800&height=600&random={i}",
@@ -118,8 +121,8 @@ def main():
     parser.add_argument("-p", "--playwright", action="store_true", help="使用 playwright 引擎")
     parser.add_argument("-w", "--wait", type=int, default=5, help="等待秒数")
     parser.add_argument("-f", "--full", action="store_true", help="获取完整内容")
-    parser.add_argument("-s", "--session", help="会话文件 (用于登录状态)")
-    parser.add_argument("--login", action="store_true", help="交互式登录")
+    parser.add_argument("-s", "--session", help="会话文件路径 (默认: ./sessions/{类型}_session.json)")
+    parser.add_argument("--login", action="store_true", help="交互式登录 (会自动保存会话)")
     
     args = parser.parse_args()
     
@@ -164,6 +167,14 @@ def main():
     
     if args.login:
         cmd.append("--login")
+        # 自动保存会话
+        os.makedirs(SESSION_DIR, exist_ok=True)
+        if args.session:
+            session_file = args.session
+        else:
+            session_file = os.path.join(SESSION_DIR, f"{args.search_type}_session.json")
+        cmd.extend(["-s", session_file])
+        print(f"[Super Search] 💾 会话将保存至: {session_file}")
     elif args.session:
         cmd.extend(["-s", args.session])
     
