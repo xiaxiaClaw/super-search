@@ -26,6 +26,8 @@ WEB_TEMPLATES = {
     "paper": {
         "arxiv": "https://arxiv.org/search/?searchtype=all&query={keyword}&start=0",
         "paperswithcode": "https://paperswithcode.com/search?q={keyword}",
+        "semantic": "https://www.semanticscholar.org/search?q={keyword}&sort=relevance",
+        "connectedpapers": "https://www.connectedpapers.com/search?q={keyword}",
         "researchgate": "https://www.researchgate.net/search/publication?q={keyword}",
         "pubmed": "https://pubmed.ncbi.nlm.nih.gov/?term={keyword}",
         "baidu": "https://www.baidu.com/s?wd={keyword} 论文",
@@ -63,7 +65,7 @@ WEB_TEMPLATES = {
 }
 
 DEFAULT_ENGINE = "baidu"
-PAPER_DEFAULT_ENGINE = "arxiv"
+PAPER_DEFAULT_ENGINE = "paperswithcode"
 SEARCH_TYPES = ["web", "news", "image", "video", "paper", "ai", "finance", "politics", "academic", "shopping", "map"]
 
 # 图片URL模板
