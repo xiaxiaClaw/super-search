@@ -18,32 +18,22 @@ SEARCH_TEMPLATES = {
         "baidu": "https://www.baidu.com/s?wd={keyword}&tn=news",
         "bing": "https://cn.bing.com/search?q={keyword}&ensearch=1",
     },
-    "image": {
-        "baidu": "https://image.baidu.com/search/index?word={keyword}",
-    },
-    "video": {
-        "baidu": "https://video.baidu.com/v?word={keyword}",
-    },
 }
 
 DEFAULT_ENGINE = "baidu"
-SEARCH_TYPES = ["web", "news", "image", "video"]
+SEARCH_TYPES = ["web", "news"]
 
 def get_fetch_script():
     """获取 super-fetch 脚本路径"""
-    # 假设 super-fetch 和 super-search 在同一目录
     script_dir = os.path.dirname(os.path.abspath(__file__))
     fetch_path = os.path.join(os.path.dirname(script_dir), "super-fetch", "fetch.py")
-    
-    # 如果不在同级目录，尝试其他位置
     if not os.path.exists(fetch_path):
         fetch_path = "/home/xunbu/.openclaw/skills/super-fetch/fetch.py"
-    
     return fetch_path
 
 def main():
     parser = argparse.ArgumentParser(description="Super Search - 基于 super-fetch 的聚合搜索")
-    parser.add_argument("search_type", choices=SEARCH_TYPES, help="搜索类型")
+    parser.add_argument("search_type", choices=SEARCH_TYPES, help="搜索类型: web, news")
     parser.add_argument("keyword", help="搜索关键词")
     parser.add_argument("-e", "--engine", default=DEFAULT_ENGINE, help=f"搜索引擎 (默认: {DEFAULT_ENGINE})")
     parser.add_argument("-p", "--playwright", action="store_true", help="使用 playwright 引擎")
