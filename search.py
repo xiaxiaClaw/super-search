@@ -22,10 +22,10 @@ WEB_TEMPLATES = {
         "baidu": "https://v.baidu.com/v?word={keyword}",
         "bilibili": "https://search.bilibili.com/video?keyword={keyword}",
     },
-    # 论文搜索
+    # 论文搜索 - arxiv
     "paper": {
-        "baidu": "https://www.baidu.com/s?wd={keyword} 论文 site:arxiv.org OR site:cnki.net",
-        "bing": "https://cn.bing.com/search?q={keyword} paper",
+        "arxiv": "https://arxiv.org/search/?searchtype=all&query={keyword}&start=0",
+        "baidu": "https://www.baidu.com/s?wd={keyword} 论文",
     },
     # AI/科技搜索
     "ai": {
@@ -60,6 +60,7 @@ WEB_TEMPLATES = {
 }
 
 DEFAULT_ENGINE = "baidu"
+PAPER_DEFAULT_ENGINE = "arxiv"
 SEARCH_TYPES = ["web", "news", "image", "video", "paper", "ai", "finance", "politics", "academic", "shopping", "map"]
 
 # 图片URL模板
@@ -122,7 +123,11 @@ def main():
     
     # 构建搜索 URL
     templates = WEB_TEMPLATES.get(args.search_type, WEB_TEMPLATES["web"])
-    engine = args.engine if args.engine in templates else DEFAULT_ENGINE
+    # 论文搜索默认用 arxiv
+    if args.search_type == "paper" and args.engine == DEFAULT_ENGINE:
+        engine = PAPER_DEFAULT_ENGINE
+    else:
+        engine = args.engine if args.engine in templates else DEFAULT_ENGINE
     url = templates[engine].replace("{keyword}", args.keyword)
     
     # 显示搜索类型图标
