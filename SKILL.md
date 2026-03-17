@@ -42,9 +42,9 @@ python ~/.openclaw/skills/super-fetch/fetch.py "https://v.baidu.com/v?word=关�
 | 类型 | 引擎 | URL | 速度 |
 |-----|-----|-----|-----|
 | 通用 | Bing | `https://cn.bing.com/search?q={q}` | 快 |
+| 通用 | 百度 | `https://www.baidu.com/s?wd={q}` | 快 |
 | 通用 | 360 | `https://www.so.com/s?q={q}` | 快 |
 | 通用 | 搜狗 | `https://sogou.com/web?query={q}` | 快 |
-| 通用 | 搜狐 | `https://www.sogou.com/web?query={q}` | 快 |
 
 ## 搜索技巧
 
