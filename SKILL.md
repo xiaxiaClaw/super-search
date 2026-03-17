@@ -1,105 +1,110 @@
 ---
 name: super-search
-description: 全能型聚合搜索路由指令集。基于 super-fetch 引擎，支持学术、技术、金融、法律、社媒等 20+ 领域的高级信息挖掘。
-version: 1.0.0
+description: 基于 super-fetch 的聚合搜索工具，支持多种领域的专业搜索。
 user-invocable: true
 dependencies:
   - super-fetch
 ---
 
-# Super Search (The Intelligence Matrix)
+# Super Search
 
-本技能通过提供覆盖全领域的 **URL 构造模板**，指导 Agent 动态构造搜索请求，并驱动底层的 **`super-fetch`** 模块执行高精度的网页抓取与正文提取。
+基于 super-fetch 的全能搜索矩阵，支持通用搜索、学术研究、技术开发等多种领域。
 
-## 🌐 1. 全领域搜索矩阵 (URL Templates)
+## 快速开始
 
-请将 `{q}` 替换为经过 URL 编码（URL Encoded）的关键词。
+### 通用搜索（最常用）
 
-### 🏢 通用搜索 (General)
-| 引擎 | 核心优势 | URL 模板 |
-| :--- | :--- | :--- |
-| **Bing** | 全球通用，渲染效果极佳 | `https://cn.bing.com/search?q={q}` |
-| **Google** | 索引最全，支持高级 Dorking 语法 | `https://www.google.com/search?q={q}` |
-| **Baidu** | 中国境内机构、政府、新闻 | `https://www.baidu.com/s?wd={q}` |
-
-### 🎓 学术与研究 (Research)
-| 引擎 | 适用领域 | URL 模板 |
-| :--- | :--- | :--- |
-| **Arxiv** | AI、物理、数学论文预印本 | `https://arxiv.org/search/?searchtype=all&query={q}` |
-| **PapersWithCode** | AI 论文及其 GitHub 实现代码 | `https://paperswithcode.com/search?q={q}` |
-| **SemanticScholar** | 语义化文献关联与引文分析 | `https://www.semanticscholar.org/search?q={q}` |
-| **Hugging Face** | AI 模型、数据集、Spaces 应用 | `https://huggingface.co/models?search={q}` |
-| **PubMed** | 医学、生命科学专业文献 | `https://pubmed.ncbi.nlm.nih.gov/?term={q}` |
-| **CNKI (知网)** | 中国学术期刊 (需 --login 模式) | `https://kns.cnki.net/kns8s/defaultresult/index?kw={q}` |
-
-### 💻 技术与编程 (Dev & Tech)
-| 引擎 | 适用领域 | URL 模板 |
-| :--- | :--- | :--- |
-| **GitHub** | 全球开源项目、代码仓库 | `https://github.com/search?q={q}&type=repositories` |
-| **StackOverflow** | 编程报错排查与技术问答 | `https://stackoverflow.com/search?q={q}` |
-| **Phind** | 程序员专用 AI 搜索引擎 | `https://www.phind.com/search?q={q}` |
-| **V2EX** | 极客社区、中文技术讨论 | `https://www.google.com/search?q=site:v2ex.com/t+{q}` |
-
-### 📈 金融与商业 (Finance)
-| 引擎 | 适用领域 | URL 模板 |
-| :--- | :--- | :--- |
-| **雪球 (Xueqiu)** | A股/美股/港股投资讨论、研报 | `https://xueqiu.com/k?q={q}` |
-| **Yahoo Finance** | 全球金融市场数据、财报 | `https://finance.yahoo.com/lookup?s={q}` |
-| **东方财富** | 国内公告、个股行情 | `https://so.eastmoney.com/Search/Index?keyword={q}` |
-
-### 📱 社交媒体与趋势 (Social)
-| 引擎 | 适用领域 | URL 模板 |
-| :--- | :--- | :--- |
-| **知乎 (Zhihu)** | 高质量中文长文、专业问答 | `https://www.zhihu.com/search?type=content&q={q}` |
-| **小红书 (XHS)** | 消费决策、生活百科 (需 Playwright) | `https://www.xiaohongshu.com/search_result?keyword={q}` |
-| **YouTube** | 全球视频资讯、教程 | `https://www.youtube.com/results?search_query={q}` |
-
----
-
-## 🛠 2. 搜索增强技巧 (Search Dorking)
-
-Agent 应当在 `{q}` 中加入指令以过滤噪音：
-- **精准匹配**：`"{q}"` (给词加双引号)
-- **站内搜索**：`site:example.com {q}`
-- **文件类型**：`{q} filetype:pdf` (查找文档/研报)
-- **排除干扰**：`{q} -广告 -推广`
-
----
-
-## 🔄 3. Agent 标准操作流 (SOP)
-
-### 步骤一：路径构造
-根据用户问题，动态拼接 URL。
-*示例：查找 DeepSeek 推理原理* -> 使用 Arxiv -> `https://arxiv.org/search/?searchtype=all&query=DeepSeek+Reasoning`
-
-### 步骤二：调用 Super Fetch 执行抓取
-使用 **`super-fetch`** 技能下的 `fetch.py`。
-**注意：搜索引擎页面建议始终强制开启 Playwright 引擎。**
 ```bash
-# 自动识别脚本路径进行调用
-python ~/.openclaw/skills/super-fetch/fetch.py "<构造好的URL>" -e playwright -w 3
+# 激活环境
+source /tmp/fetch-venv/bin/activate
+
+# 通用网页搜索
+python ~/.openclaw/skills/super-fetch/fetch.py "https://cn.bing.com/search?q=关键词" -e cffi
 ```
 
-### 步骤三：提取代号与深度阅读
-1. 解析 `fetch.py` 返回的 Markdown。
-2. 识别条目链接代号（如 `(@ns-1)`）。
-3. 调用 **`get_link.py`** 获取真实地址：
-   `python ~/.openclaw/skills/super-fetch/get_link.py ns-1`
-4. 再次对详情页 URL 使用 `fetch.py` 进行深度阅读。
+**推荐搜索引擎**：
+| 引擎 | URL | 速度 |
+|-----|-----|-----|
+| Bing | `https://cn.bing.com/search?q={q}` | 快 |
+| 360 | `https://www.so.com/s?q={q}` | 快 |
+| 搜狗 | `https://sogou.com/web?query={q}` | 快 |
 
-### 步骤四：释放命名空间 (Cleanup)
-分析任务结束后，及时清理该搜索任务产生的本地链接映射。
+### 新闻搜索
+
 ```bash
-python ~/.openclaw/skills/super-fetch/get_link.py --clear ns
+# 百度新闻
+python ~/.openclaw/skills/super-fetch/fetch.py "https://www.baidu.com/s?wd=关键词&tn=news" -e cffi
 ```
 
 ---
 
-## 💡 4. 极端场景决策 (Edge Cases)
+## 进阶使用
 
-- **返回 "Just a moment" 或 403**：这是触发了 Cloudflare 或人机验证。**对策**：向用户请求协助，执行 `python fetch.py "<URL>" --login` 开启手动验证。
-- **搜索结果太少**：检查是否关键词太长。**对策**：缩短关键词或将其翻译成英文再次尝试。
-- **信息过载**：不要一次性反查所有链接。根据摘要评分，只反查排名前 3 的高相关度代号。
+### 🎓 学术搜索
+
+详细 URL 模板：
+
+| 引擎 | 用途 | URL |
+|-----|-----|-----|
+| Arxiv | AI/物理论文 | `https://arxiv.org/search/?searchtype=all&query={q}` |
+| PapersWithCode | 论文+代码 | `https://paperswithcode.com/search?q={q}` |
+| Semantic Scholar | 语义搜索 | `https://www.semanticscholar.org/search?q={q}` |
+| PubMed | 医学文献 | `https://pubmed.ncbi.nlm.nih.gov/?term={q}` |
+
+### 💻 技术搜索
+
+| 引擎 | 用途 | URL |
+|-----|-----|-----|
+| GitHub | 代码仓库 | `https://github.com/search?q={q}&type=repositories` |
+| StackOverflow | 技术问答 | `https://stackoverflow.com/search?q={q}` |
+
+### 📈 金融搜索
+
+| 引擎 | 用途 | URL |
+|-----|-----|-----|
+| 雪球 | A股讨论 | `https://xueqiu.com/k?q={q}` |
+| 东方财富 | 公告财报 | `https://so.eastmoney.com/Search/Index?keyword={q}` |
+
+### 📱 社媒搜索
+
+| 引擎 | 用途 | URL |
+|-----|-----|-----|
+| 知乎 | 专业问答 | `https://www.zhihu.com/search?type=content&q={q}` |
+| YouTube | 视频 | `https://www.youtube.com/results?search_query={q}` |
 
 ---
-**提示**：本技能高度依赖 `super-fetch` 的安装路径 `~/.openclaw/skills/super-fetch/`。确保脚本具备执行权限。
+
+## 搜索技巧
+
+### Dorking 语法
+- **精准匹配**：`"关键词"`
+- **站内搜索**：`site:example.com 关键词`
+- **文件类型**：`关键词 filetype:pdf`
+
+### 引擎选择
+- **静态页面**：用 CFFI（`-e cffi`）
+- **动态渲染**：用 Playwright（`-e playwright -w 5`）
+- **绕过验证**：用 `--interactive` 手动验证
+
+---
+
+## 完整示例
+
+```bash
+# 1. 搜索论文
+python ~/.openclaw/skills/super-fetch/fetch.py "https://arxiv.org/search/?searchtype=all&query=deep+learning" -e cffi
+
+# 2. 搜索 GitHub
+python ~/.openclaw/skills/super-fetch/fetch.py "https://github.com/search?q=python&type=repositories" -e playwright -w 5
+
+# 3. 搜索新闻（带会话）
+python ~/.openclaw/skills/super-fetch/fetch.py "https://www.baidu.com/s?wd=今日热点&tn=news" -e cffi -s session.json
+```
+
+---
+
+## 注意事项
+
+1. 搜索引擎建议始终使用 Playwright 引擎（`-e playwright`）以获得最佳渲染效果
+2. 会话文件默认保存在 `~/.openclaw/skills/super-fetch/session.json`
+3. 使用完成后记得清理命名空间：`python ~/.openclaw/skills/super-fetch/get_link.py --clear <ns>`
