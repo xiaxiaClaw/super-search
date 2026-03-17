@@ -22,9 +22,10 @@ WEB_TEMPLATES = {
         "baidu": "https://v.baidu.com/v?word={keyword}",
         "bilibili": "https://search.bilibili.com/video?keyword={keyword}",
     },
-    # 论文搜索 - arxiv
+    # 论文搜索 - 多来源
     "paper": {
         "arxiv": "https://arxiv.org/search/?searchtype=all&query={keyword}&start=0",
+        "paperswithcode": "https://paperswithcode.com/search?q={keyword}",
         "baidu": "https://www.baidu.com/s?wd={keyword} 论文",
     },
     # AI/科技搜索
