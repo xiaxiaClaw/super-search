@@ -70,6 +70,7 @@ SEARCH_TYPES = ["web", "news", "image", "video", "paper", "ai", "finance", "poli
 
 # Session 文件默认目录
 SESSION_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sessions")
+DEFAULT_SESSION = os.path.join(SESSION_DIR, "session.json")  # 统一会话文件
 
 # 图片URL模板
 IMAGE_URLS = {
@@ -167,12 +168,12 @@ def main():
     
     if args.login:
         cmd.append("--login")
-        # 自动保存会话
+        # 自动保存会话（统一使用 session.json）
         os.makedirs(SESSION_DIR, exist_ok=True)
         if args.session:
             session_file = args.session
         else:
-            session_file = os.path.join(SESSION_DIR, f"{args.search_type}_session.json")
+            session_file = DEFAULT_SESSION
         cmd.extend(["-s", session_file])
         print(f"[Super Search] 💾 会话将保存至: {session_file}")
     elif args.session:
