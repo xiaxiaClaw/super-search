@@ -210,8 +210,8 @@ python fetch.py "https://www.bing.com/news/search?q=Meta+AI+Llama+model+release"
 # Mistral AI 模型动态
 python fetch.py "https://www.bing.com/news/search?q=Mistral+AI+model+release" -e playwright -w 3
 
-# 国内大模型（百度/阿里/字节/DeepSeek）
-python fetch.py "https://www.baidu.com/s?wd=文心一言+通义千问+豆包+DeepSeek+发布" -e playwright -w 3
+# 国内大模型（百度/阿里/字节/DeepSeek）- 用 Bing 国际版搜索中文
+python fetch.py "https://cn.bing.com/search?q=文心一言+OR+通义千问+OR+豆包+OR+DeepSeek+发布+2026" -e playwright -w 3
 ```
 
 #### B. 新产品/新应用发布（最高优先级 ⭐⭐⭐⭐⭐）
@@ -244,8 +244,8 @@ python fetch.py "https://github.com/trending" -e playwright -w 5
 #### D. 大厂动态/产品发布
 
 ```bash
-# 百度 AI 新闻
-python fetch.py "https://www.baidu.com/s?wd=AI+发布+2026" -e playwright -w 3
+# Bing AI 新闻
+python fetch.py "https://www.bing.com/news/search?q=AI+product+launch+2026" -e playwright -w 3
 
 # 搜狗 AI 新闻
 python fetch.py "https://www.sogou.com/web?query=AI+大模型+发布+site:news.sina.com.cn" -e cffi
@@ -260,8 +260,8 @@ python fetch.py "https://www.36kr.com/search/articles/AI" -e playwright -w 3
 # 机器之心
 python fetch.py "https://www.jiqizhixin.com/" -e playwright -w 3
 
-# AI科技媒体
-python fetch.py "https://news.sina.com.cn/roll/index.shtml#5" -e playwright -w 3
+# Bing AI 专题
+python fetch.py "https://www.bing.com/news/search?q=AI+model+release+China" -e playwright -w 3
 ```
 
 ### AI 新闻输出格式
