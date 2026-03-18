@@ -186,6 +186,88 @@ python fetch.py "https://www.zhihu.com/search?q=AI" -s
 - **目录**: `~/.openclaw/super-fetch/`
 - 与 super-fetch 共享会话和链接数据库
 
+## AI 新闻搜索（重点）
+
+AI 新闻需要多维度分层搜索，才能捕捉到社区热点和病毒传播现象。
+
+### AI 新闻搜索维度
+
+#### A. 周报/Newsletter 聚合（最优先）
+
+```bash
+# 中文 AI 周报
+python fetch.py "https://www.zhihu.com/search?type=content&q=AI+周报" -e playwright -w 3
+
+# 英文 AI 周报
+python fetch.py "https://search.ycombinator.com/?query=last+week+AI" -e cffi
+python fetch.py "https://www.producthunt.com/search?q=AI+weekly" -e playwright -w 3
+```
+
+#### B. 社区热度/病毒传播（关键维度）
+
+```bash
+# Reddit AI 热点
+python fetch.py "https://www.reddit.com/search/?q=AI+viral+OR+AI+trending" -e playwright -w 3
+
+# Hacker News AI
+python fetch.py "https://hn.algolia.com/?query=AI+viral" -e cffi
+
+# GitHub Trending AI
+python fetch.py "https://github.com/trending?since=daily" -e playwright -w 5
+```
+
+#### C. 大厂动态/产品发布
+
+```bash
+# 百度 AI 新闻
+python fetch.py "https://www.baidu.com/s?wd=AI+发布+2026" -e playwright -w 3
+
+# 搜狗 AI 新闻
+python fetch.py "https://www.sogou.com/web?query=AI+大模型+发布+site:news.sina.com.cn" -e cffi
+```
+
+#### D. 垂直媒体/专业来源
+
+```bash
+# 36氪 AI
+python fetch.py "https://www.36kr.com/search/articles/AI" -e playwright -w 3
+
+# 机器之心
+python fetch.py "https://www.jiqizhixin.com/search?keyWord=AI" -e playwright -w 3
+
+# AI科技媒体
+python fetch.py "https://news.sina.com.cn/roll/index.shtml#5" -e playwright -w 3
+```
+
+### AI 新闻输出格式
+
+```
+## AI 新闻速递（YYYY-MM-DD）
+
+### 热度排序（1-5星）
+1. [标题]
+   > 一句话摘要
+   > 🔗 来源 | 热度: ⭐⭐⭐
+
+### 热度判断标准
+- 多家媒体报道 → 高热度
+- 社区病毒传播（GitHub star暴涨、刷屏）→ 高热度
+- 大厂官宣 → 中高热度
+- 争议性话题 → 往往说明影响力大
+```
+
+### AI 新闻源速查
+
+| 来源 | 类型 | URL | 引擎 |
+|------|------|-----|------|
+| 机器之心 | 垂直媒体 | https://www.jiqizhixin.com/ | playwright |
+| 36氪 | 科技媒体 | https://www.36kr.com/ | playwright |
+| Reddit r/MachineLearning | 社区 | https://www.reddit.com/r/MachineLearning/ | playwright |
+| Hacker News | 社区 | https://news.ycombinator.com/ | cffi |
+| GitHub Trending | 开源趋势 | https://github.com/trending | playwright |
+| Product Hunt | 产品发布 | https://www.producthunt.com/ | playwright |
+| 百度 AI 新闻 | 搜索聚合 | https://www.baidu.com/s?wd=AI+新闻 | playwright |
+
 ## 详细领域文档
 
 详见 references/ 目录：
