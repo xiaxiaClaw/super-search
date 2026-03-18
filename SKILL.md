@@ -188,35 +188,60 @@ python fetch.py "https://www.zhihu.com/search?q=AI" -s
 
 ## AI 新闻搜索（重点）
 
-AI 新闻需要多维度分层搜索，才能捕捉到社区热点和病毒传播现象。
+AI 新闻需要多维度分层搜索，**重点关注：新模型、新产品、新应用动向**。
 
 ### AI 新闻搜索维度
 
-#### A. 周报/Newsletter 聚合（最优先）
+#### A. 新模型发布（最高优先级 ⭐⭐⭐⭐⭐）
 
 ```bash
-# 中文 AI 周报
-python fetch.py "https://www.zhihu.com/search?type=content&q=AI+周报" -e playwright -w 3
+# OpenAI 模型动态
+python fetch.py "https://www.bing.com/news/search?q=OpenAI+model+release+site:openai.com" -e playwright -w 3
 
-# 英文 AI 周报
-python fetch.py "https://search.ycombinator.com/?query=last+week+AI" -e cffi
-python fetch.py "https://www.producthunt.com/search?q=AI+weekly" -e playwright -w 3
+# Anthropic 模型动态
+python fetch.py "https://www.bing.com/news/search?q=Anthropic+Claude+model" -e playwright -w 3
+
+# Google AI 模型动态
+python fetch.py "https://www.bing.com/news/search?q=Google+DeepMind+AI+model+Gemini" -e playwright -w 3
+
+# Meta AI 模型动态
+python fetch.py "https://www.bing.com/news/search?q=Meta+AI+Llama+model+release" -e playwright -w 3
+
+# Mistral AI 模型动态
+python fetch.py "https://www.bing.com/news/search?q=Mistral+AI+model+release" -e playwright -w 3
+
+# 国内大模型（百度/阿里/字节/DeepSeek）
+python fetch.py "https://www.baidu.com/s?wd=文心一言+通义千问+豆包+DeepSeek+发布" -e playwright -w 3
 ```
 
-#### B. 社区热度/病毒传播（关键维度）
+#### B. 新产品/新应用发布（最高优先级 ⭐⭐⭐⭐⭐）
+
+```bash
+# Product Hunt 新品
+python fetch.py "https://www.producthunt.com/" -e playwright -w 5
+python fetch.py "https://www.producthunt.com/search?q=AI" -e playwright -w 3
+
+# AI 产品发布
+python fetch.py "https://www.bing.com/news/search?q=AI+product+launch+2026" -e playwright -w 3
+
+# AI 应用爆款
+python fetch.py "https://www.reddit.com/r/MachineLearning/" -e playwright -w 3
+```
+
+#### C. 社区热度/病毒传播（关键维度）
 
 ```bash
 # Reddit AI 热点
 python fetch.py "https://www.reddit.com/search/?q=AI+viral+OR+AI+trending" -e playwright -w 3
 
 # Hacker News AI
-python fetch.py "https://hn.algolia.com/?query=AI+viral" -e cffi
+python fetch.py "https://news.ycombinator.com/" -e playwright -w 3
 
 # GitHub Trending AI
-python fetch.py "https://github.com/trending?since=daily" -e playwright -w 5
+python fetch.py "https://github.com/trending" -e playwright -w 5
 ```
 
-#### C. 大厂动态/产品发布
+#### D. 大厂动态/产品发布
 
 ```bash
 # 百度 AI 新闻
@@ -226,14 +251,14 @@ python fetch.py "https://www.baidu.com/s?wd=AI+发布+2026" -e playwright -w 3
 python fetch.py "https://www.sogou.com/web?query=AI+大模型+发布+site:news.sina.com.cn" -e cffi
 ```
 
-#### D. 垂直媒体/专业来源
+#### E. 垂直媒体/专业来源
 
 ```bash
 # 36氪 AI
 python fetch.py "https://www.36kr.com/search/articles/AI" -e playwright -w 3
 
 # 机器之心
-python fetch.py "https://www.jiqizhixin.com/search?keyWord=AI" -e playwright -w 3
+python fetch.py "https://www.jiqizhixin.com/" -e playwright -w 3
 
 # AI科技媒体
 python fetch.py "https://news.sina.com.cn/roll/index.shtml#5" -e playwright -w 3
@@ -244,17 +269,33 @@ python fetch.py "https://news.sina.com.cn/roll/index.shtml#5" -e playwright -w 3
 ```
 ## AI 新闻速递（YYYY-MM-DD）
 
-### 热度排序（1-5星）
-1. [标题]
-   > 一句话摘要
-   > 🔗 来源 | 热度: ⭐⭐⭐
+### 🆕 新模型 / ⭐⭐⭐⭐⭐
+1. [模型名称] - [一句话描述]
+   > 🔗 来源 | 发布时间
 
-### 热度判断标准
-- 多家媒体报道 → 高热度
-- 社区病毒传播（GitHub star暴涨、刷屏）→ 高热度
-- 大厂官宣 → 中高热度
-- 争议性话题 → 往往说明影响力大
+### 🚀 新产品 / ⭐⭐⭐⭐
+2. [产品名称] - [一句话描述]
+   > 🔗 来源 | 发布时间
+
+### 💡 新应用 / ⭐⭐⭐
+3. [应用名称] - [一句话描述]
+   > 🔗 来源 | 发布时间
+
+### 🔥 社区热点 / ⭐⭐⭐⭐
+4. [热点内容] - [一句话描述]
+   > 🔗 来源 | 热度指标
 ```
+
+### 热度判断标准（新模型/产品/应用优先）
+
+| 类型 | 热度 | 说明 |
+|------|------|------|
+| **新模型发布** | ⭐⭐⭐⭐⭐ | OpenAI/Anthropic/Google/Meta/国内大厂 |
+| **新产品发布** | ⭐⭐⭐⭐⭐ | Product Hunt 热门、AI 应用爆款 |
+| **新应用上线** | ⭐⭐⭐⭐ | AI 落地案例、行业应用 |
+| **大厂官宣** | ⭐⭐⭐⭐ | 大厂 AI 动态 |
+| **社区病毒传播** | ⭐⭐⭐⭐ | GitHub star暴涨、刷屏 |
+| **论文/研究突破** | ⭐⭐⭐ | 学术进展 |
 
 ### AI 新闻源速查
 
